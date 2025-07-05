@@ -8,6 +8,9 @@ const supabase = createClient(
 );
 
 export default function AddMatch() {
+  const [formVisible, setFormVisible] = useState(false);
+
+  // Ottelutiedot
   const [homeTeam, setHomeTeam] = useState("");
   const [awayTeam, setAwayTeam] = useState("");
   const [homeGoals, setHomeGoals] = useState("");
@@ -45,43 +48,52 @@ export default function AddMatch() {
       console.error("Virhe lisäyksessä:", error);
     } else {
       console.log("Ottelu lisätty:", data);
+      setFormVisible(false); // Piilota lomake lisäyksen jälkeen
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Ottelutiedot</h2>
-      <input value={homeTeam} onChange={(e) => setHomeTeam(e.target.value)} placeholder="Kotijoukkue" required />
-      <input value={awayTeam} onChange={(e) => setAwayTeam(e.target.value)} placeholder="Vierasjoukkue" required />
-      <input type="number" value={homeGoals} onChange={(e) => setHomeGoals(e.target.value)} placeholder="Koti maalit" required />
-      <input type="number" value={awayGoals} onChange={(e) => setAwayGoals(e.target.value)} placeholder="Vieras maalit" required />
-      <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
-      <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Pelipaikka" required />
+    <div>
+      <button onClick={() => setFormVisible(!formVisible)}>
+        {formVisible ? "Piilota lomake" : "Lisää uusi ottelu"}
+      </button>
 
-      <h2>Pelaajien tehot</h2>
-      {players.map((player, index) => (
-        <div key={index}>
-          <input
-            value={player.name}
-            onChange={(e) => handlePlayerChange(index, "name", e.target.value)}
-            placeholder={`Pelaaja ${index + 1}`}
-          />
-          <input
-            type="number"
-            value={player.goals}
-            onChange={(e) => handlePlayerChange(index, "goals", e.target.value)}
-            placeholder="Maalit"
-          />
-          <input
-            type="number"
-            value={player.assists}
-            onChange={(e) => handlePlayerChange(index, "assists", e.target.value)}
-            placeholder="Syötöt"
-          />
-        </div>
-      ))}
+      {formVisible && (
+        <form onSubmit={handleSubmit}>
+          <h2>Ottelutiedot</h2>
+          <input value={homeTeam} onChange={(e) => setHomeTeam(e.target.value)} placeholder="Kotijoukkue" required />
+          <input value={awayTeam} onChange={(e) => setAwayTeam(e.target.value)} placeholder="Vierasjoukkue" required />
+          <input type="number" value={homeGoals} onChange={(e) => setHomeGoals(e.target.value)} placeholder="Koti maalit" required />
+          <input type="number" value={awayGoals} onChange={(e) => setAwayGoals(e.target.value)} placeholder="Vieras maalit" required />
+          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+          <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Pelipaikka" required />
 
-      <button type="submit">Lisää ottelu</button>
-    </form>
+          <h2>Pelaajien tehot</h2>
+          {players.map((player, index) => (
+            <div key={index}>
+              <input
+                value={player.name}
+                onChange={(e) => handlePlayerChange(index, "name", e.target.value)}
+                placeholder={`Pelaaja ${index + 1}`}
+              />
+              <input
+                type="number"
+                value={player.goals}
+                onChange={(e) => handlePlayerChange(index, "goals", e.target.value)}
+                placeholder="Maalit"
+              />
+              <input
+                type="number"
+                value={player.assists}
+                onChange={(e) => handlePlayerChange(index, "assists", e.target.value)}
+                placeholder="Syötöt"
+              />
+            </div>
+          ))}
+
+          <button type="submit">Lisää ottelu</button>
+        </form>
+      )}
+    </div>
   );
 }

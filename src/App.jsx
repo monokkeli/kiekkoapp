@@ -1,13 +1,15 @@
-import Pisteporssi from "./Pisteporssi";
+// src/App.jsx
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Etusivu from "./Etusivu";
 import AddMatch from "./AddMatch";
 
-function App() {
+export default function App() {
   return (
-    <div>
-      <Pisteporssi />
-      <AddMatch />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Etusivu />} />
+        <Route path="/lisaa-ottelu" element={<AddMatch />} />
+      </Routes>
+    </Router>
   );
 }
-
-export default App;
